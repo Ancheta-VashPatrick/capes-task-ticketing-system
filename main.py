@@ -5,6 +5,8 @@
     
     If downloaded, Ctrl F niyo lang then type "Change this" to change links, IDs, etc.
 
+    
+
 """
 
 import discord
@@ -21,13 +23,15 @@ from apikeys import *
 
 import subprocess
 subprocess.Popen(["python", "task_checker.py"])
-
-
      
 SERVICE_ACCOUNT_FILE = "/home/harryarciga/task-ticketing-system/credentials.json"  # Change this to the path of credentials.json
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
-SPREADSHEET_ID = "1DLGU03Z-3UxcL-zUGQcv34VonNVQ8tZ8YUaBj3KdSHM"  # Change this to the Google Spreadsheet ID
+SPREADSHEET_ID = "1qQray0kmeoOms-TaKT5WAWekBjIvg7lVcWQT5s_WQSY"  # Change this to the Google Spreadsheet ID
 RANGE_NAME = "Tickets!B12:B503"  # You may adjust this once the tasks are over 500
+
+TASK_MANAGEMENT_CHANNEL_ID = 1341731679223418921 
+UP_CAPES_SERVER_ID = 1279363702889644082
+NOTIFICATIONS_CHANNEL_ID = 1341731835377352714 
 
 credentials = service_account.Credentials.from_service_account_file(
     SERVICE_ACCOUNT_FILE, scopes=SCOPES
@@ -122,13 +126,12 @@ async def show_embed():
     print("The bot is now ready for use!")
     print("-----------------------------")
 
-    channel_id = 1302238822720868374  # Change this to the text channel id
-    channel = client.get_channel(channel_id)
+    channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
 
     if channel:
         embed = discord.Embed(
             title="UP CAPES Task Ticketing System",
-            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button\nor modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://tinyurl.com/UPCAPES-Task-Sheets",
+            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button\nor modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
             color=0xffcc1a
         )
 
@@ -232,13 +235,14 @@ class MyView(discord.ui.View):
                         color=0xffcc1a,
                     )
 
-                    channel_id = 1302238822720868374  # Change this to actual channel ID
-                    channel = client.get_channel(channel_id)
+                    channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
 
 
                     time.sleep(0.2)
 
-                    await channel.send(embed = embed)
+                    await interaction.followup.send(embed=embed, ephemeral=True)
+
+
 
                     await interaction.followup.send(
                         f"Is there anything you wish to change on the task details?\n*Choose **Restart** if you want to restart again from the beginning*.",
@@ -298,12 +302,11 @@ class TaskContextDropdown(discord.ui.Select):
         if selected_context == "Restart":
             await interaction.response.defer()
 
-            channel_id = 1302238822720868374 # Change this to actual channel ID
-            channel = client.get_channel(channel_id)
+            channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
 
             embed = discord.Embed(
             title="UP CAPES Task Ticketing System",
-            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://tinyurl.com/UPCAPES-Task-Sheets",
+            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
             color=0xffcc1a
             )
             embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -337,12 +340,11 @@ class TaskContextDropdown(discord.ui.Select):
             await msg.delete() 
 
             if task_name == "R":
-                channel_id = 1302238822720868374  # Change this to actual channel ID
-                channel = client.get_channel(channel_id)
+                channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
 
                 embed = discord.Embed(
                 title="UP CAPES Task Ticketing System",
-                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://tinyurl.com/UPCAPES-Task-Sheets",
+                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
                 color=0xffcc1a
                 )
                 embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -394,12 +396,11 @@ class TaskPriorityDropdown(discord.ui.Select):
         if selected_priority == "Restart":
             await interaction.response.defer()
 
-            channel_id = 1302238822720868374  # Change this to actual channel ID
-            channel = client.get_channel(channel_id)
+            channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
 
             embed = discord.Embed(
             title="UP CAPES Task Ticketing System",
-            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://tinyurl.com/UPCAPES-Task-Sheets",
+            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
             color=0xffcc1a
             )
             embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -467,12 +468,11 @@ class CommitteeDropdown(discord.ui.Select):
             if sel_requesting_committee == "Restart":
                 await interaction.response.defer() 
 
-                channel_id = 1302238822720868374  # Change this to actual channel ID
-                channel = client.get_channel(channel_id)
+                channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
 
                 embed = discord.Embed(
                 title="UP CAPES Task Ticketing System",
-                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://tinyurl.com/UPCAPES-Task-Sheets",
+                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
                 color=0xffcc1a
                 )
                 embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -508,12 +508,11 @@ class CommitteeDropdown(discord.ui.Select):
             if committee_responsible == "Restart":
                 await interaction.response.defer()
 
-                channel_id = 1302238822720868374  # Change this to actual channel ID
-                channel = client.get_channel(channel_id)
+                channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
 
                 embed = discord.Embed(
                 title="UP CAPES Task Ticketing System",
-                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://tinyurl.com/UPCAPES-Task-Sheets",
+                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
                 color=0xffcc1a
                 )
                 embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -549,12 +548,11 @@ class CommitteeDropdown(discord.ui.Select):
             if selected_receiving_committee == "Restart":
                 await interaction.response.defer() 
 
-                channel_id = 1302238822720868374  # Change this to actual channel ID
-                channel = client.get_channel(channel_id)
+                channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
 
                 embed = discord.Embed(
                 title="UP CAPES Task Ticketing System",
-                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://tinyurl.com/UPCAPES-Task-Sheets",
+                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
                 color=0xffcc1a
                 )
                 embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -563,7 +561,7 @@ class CommitteeDropdown(discord.ui.Select):
 
                 await interaction.followup.send(embed=embed, view=view, ephemeral=True)
 
-            elif self.change == "yes" and selectec_receiving_committee != "Restart":
+            elif self.change == "yes" and selected_receiving_committee != "Restart":
                 await interaction.response.defer(ephemeral=True)
 
                 await interaction.followup.send(
@@ -587,12 +585,11 @@ class CommitteeDropdown(discord.ui.Select):
 
                 if deadline == "R":
 
-                    channel_id = 1302238822720868374 # Change this to actual channel ID
-                    channel = client.get_channel(channel_id)
+                    channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
 
                     embed = discord.Embed(
                     title="UP CAPES Task Ticketing System",
-                    description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://tinyurl.com/UPCAPES-Task-Sheets",
+                    description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
                     color=0xffcc1a
                     )
                     embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -613,12 +610,12 @@ class CommitteeDropdown(discord.ui.Select):
                     await notes_msg.delete()
 
                     if notes == "R":
-                        channel_id = 1302238822720868374 # Change this to actual channel ID
-                        channel = client.get_channel(channel_id)
+
+                        channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
 
                         embed = discord.Embed(
                         title="UP CAPES Task Ticketing System",
-                        description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://tinyurl.com/UPCAPES-Task-Sheets",
+                        description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
                         color=0xffcc1a
                         )
                         embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -640,12 +637,11 @@ class CommitteeDropdown(discord.ui.Select):
 
                         if creator_mention == "R":
 
-                            channel_id = 1302238822720868374  # Change this to actual channel ID
-                            channel = client.get_channel(channel_id)
+                            channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
 
                             embed = discord.Embed(
                             title="UP CAPES Task Ticketing System",
-                            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://tinyurl.com/UPCAPES-Task-Sheets",
+                            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
                             color=0xffcc1a
                             )
                             embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -656,7 +652,7 @@ class CommitteeDropdown(discord.ui.Select):
 
                         else:
                             await interaction.followup.send(
-                                f"You tagged {creator_mention} as the task creator. Lastly, please mention the **specific person/s responsible** for the task.\nExample: @Juan @joaquin23\n*Choose **Restart** if you want to restart again from the beginning*.",
+                                f"You tagged {creator_mention} as the task creator. Lastly, please mention the **specific person/s responsible** for the task.\nExample: @Juan @joaquin23\n*Type **Restart** if you want to restart again from the beginning*.",
                                 ephemeral=True,
                                 )
                             respo_mentions_msg = await client.wait_for("message", check=check)
@@ -666,12 +662,11 @@ class CommitteeDropdown(discord.ui.Select):
                             if respo_mentions == "R":
                                 await interaction.response.defer()  
 
-                                channel_id = 1302238822720868374  # Change this to actual channel ID
-                                channel = client.get_channel(channel_id)
+                                channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
 
                                 embed = discord.Embed(
                                 title="UP CAPES Task Ticketing System",
-                                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://tinyurl.com/UPCAPES-Task-Sheets",
+                                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
                                 color=0xffcc1a
                                 )
                                 embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -707,8 +702,8 @@ class CommitteeDropdown(discord.ui.Select):
                                 )
 
                                 
-                                target_guild = client.get_guild(1302238411020832780) # Change this to actual server ID
-                                target_channel = target_guild.get_channel(1320416019272957993) # Change this to actual channel ID
+                                target_guild = client.get_guild(UP_CAPES_SERVER_ID) # Change this to actual server ID
+                                target_channel = target_guild.get_channel(NOTIFICATIONS_CHANNEL_ID) # Change this to actual channel ID
 
                                 if target_channel:
                                     await target_channel.send(embed=embed)
@@ -737,12 +732,11 @@ class CommitteeDropdown(discord.ui.Select):
 
                                 await interaction.followup.send(embed=embed, ephemeral=True)
 
-                                channel_id = 1302238822720868374  # Change this to actual channel ID
-                                channel = client.get_channel(channel_id)
+                                channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
 
                                 embed = discord.Embed(
                                 title="UP CAPES Task Ticketing System",
-                                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button\nor modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://tinyurl.com/UPCAPES-Task-Sheets",
+                                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button\nor modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
                                 color=0xffcc1a
                                 )
                                 
@@ -750,7 +744,7 @@ class CommitteeDropdown(discord.ui.Select):
 
                                 time.sleep(0.3)
 
-                                await channel.send(embed = embed, view=view)
+                                await interaction.followup.send(embed=embed, view=view, ephemeral=True)
 
 
 class SubcommitteeDropdown(discord.ui.Select):
@@ -838,12 +832,11 @@ class SubcommitteeDropdown(discord.ui.Select):
         if selected_subcommittee == "Restart":
             await interaction.response.defer()  
 
-            channel_id = 1302238822720868374  # Change this to actual channel ID
-            channel = client.get_channel(channel_id)
+            channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
 
             embed = discord.Embed(
             title="UP CAPES Task Ticketing System",
-            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://tinyurl.com/UPCAPES-Task-Sheets",
+            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
             color=0xffcc1a
             )
             embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -910,12 +903,11 @@ class TaskStatusDropdown(discord.ui.Select):
         if selected_task_status == "Restart":
             await interaction.response.defer() 
 
-            channel_id = 1302238822720868374  # Change this to actual channel ID
-            channel = client.get_channel(channel_id)
+            channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
 
             embed = discord.Embed(
             title="UP CAPES Task Ticketing System",
-            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://tinyurl.com/UPCAPES-Task-Sheets",
+            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
             color=0xffcc1a
             )
             embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -963,12 +955,11 @@ class ResolvedStatusDropdown(discord.ui.Select):
         if selected_resolved_status  == "Restart":
             await interaction.response.defer()
 
-            channel_id = 1302238822720868374  # Change this to actual channel ID
-            channel = client.get_channel(channel_id)
+            channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
 
             embed = discord.Embed(
             title="UP CAPES Task Ticketing System",
-            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://tinyurl.com/UPCAPES-Task-Sheets",
+            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
             color=0xffcc1a
             )
             embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -1022,12 +1013,11 @@ class AnsweredNoneDropdown(discord.ui.Select):
         if selected_resolved_status == "Restart":
             await interaction.response.defer()  
 
-            channel_id = 1302238822720868374  # Change this to actual channel ID
-            channel = client.get_channel(channel_id)
+            channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
 
             embed = discord.Embed(
             title="UP CAPES Task Ticketing System",
-            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://tinyurl.com/UPCAPES-Task-Sheets",
+            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
             color=0xffcc1a
             )
             embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -1095,8 +1085,8 @@ class AnsweredNoneDropdown(discord.ui.Select):
             await interaction.response.defer(ephemeral=True)
             await interaction.followup.send(embed=embed, ephemeral=True)
 
-            target_guild = client.get_guild(1302238411020832780) # Change this to actual server ID
-            target_channel = target_guild.get_channel(1320416019272957993) # Change this to actual channel ID
+            target_guild = client.get_guild(UP_CAPES_SERVER_ID) # Change this to actual server ID
+            target_channel = target_guild.get_channel(NOTIFICATIONS_CHANNEL_ID) # Change this to actual channel ID
 
             if target_channel:
                 await target_channel.send(embed=embed)
@@ -1123,12 +1113,11 @@ class AnsweredNoneDropdown(discord.ui.Select):
 
             await interaction.followup.send(embed=embed, ephemeral=True)
 
-            channel_id = 1302238822720868374  # Change this to actual channel ID
-            channel = client.get_channel(channel_id)
+            channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
 
             embed = discord.Embed(
                 title="UP CAPES Task Ticketing System",
-                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://tinyurl.com/UPCAPES-Task-Sheets",
+                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
                 color=0xffcc1a
             )
             embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -1137,7 +1126,7 @@ class AnsweredNoneDropdown(discord.ui.Select):
 
             time.sleep(2)
 
-            await channel.send(embed=embed, view=view)
+            await interaction.followup.send(embed=embed, view=view, ephemeral=True)
 
         else:
             await interaction.followup.send(
@@ -1229,12 +1218,12 @@ class ToChangeDropdown(discord.ui.Select):
             msg = await client.wait_for("message", check=check)
             task_name = msg.content  
             if task_name == "R":
-                channel_id = 1302238822720868374  # Change this to actual channel ID
-                channel = client.get_channel(channel_id)
+
+                channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
 
                 embed = discord.Embed(
                 title="UP CAPES Task Ticketing System",
-                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://tinyurl.com/UPCAPES-Task-Sheets",
+                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
                 color=0xffcc1a
                 )
                 embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -1294,7 +1283,7 @@ class ToChangeDropdown(discord.ui.Select):
             view.add_item(CommitteeDropdown("yes", "committee_responsible", self.task_id, self.task_context, self.task_description, self.task_priority, self.task_status, self.requesting_committee, self.committee_responsible, self.subcommittee_responsible, self.receiving_committee, self.resolved_status, self.deadline, self.notes, self.creator_mention, self.respo_mentions, self.cc))
             
             await interaction.followup.send(
-                f"You have selected **{selected_to_change}** as the detail you would like to change.\nIs there any detail of Task {self.task_id} you would like to be changed?\n*Choose **Restart** if you want to restart again from the beginning*.",
+                f"You have selected **{selected_to_change}** as the detail you would like to change.\nWhat **{selected_to_change}** you would like to changed?\n*Choose **Restart** if you want to restart again from the beginning*.",
                 view=view,
                 ephemeral=True
             )  
@@ -1306,7 +1295,7 @@ class ToChangeDropdown(discord.ui.Select):
             view.add_item(SubcommitteeDropdown("yes", "", "subcommittee_responsible", self.task_id, self.task_context, self.task_description, self.task_priority, self.task_status, self.requesting_committee, self.committee_responsible, self.subcommittee_responsible, self.receiving_committee, self.resolved_status, self.deadline, self.notes, self.creator_mention, self.respo_mentions, self.cc))
             
             await interaction.followup.send(
-                f"You have selected **{selected_to_change}** as the detail you would like to change.\nIs there any detail of Task {self.task_id} you would like to be changed?\n*Choose **Restart** if you want to restart again from the beginning*.",
+                f"You have selected **{selected_to_change}** as the detail you would like to change.\nWhat **{selected_to_change}** you would like to changed?\n*Choose **Restart** if you want to restart again from the beginning*.",
                 view=view,
                 ephemeral=True
             )  
@@ -1319,7 +1308,7 @@ class ToChangeDropdown(discord.ui.Select):
             view.add_item(CommitteeDropdown("yes", "receiving_committee", self.task_id, self.task_context, self.task_description, self.task_priority, self.task_status, self.requesting_committee, self.committee_responsible, self.subcommittee_responsible, self.receiving_committee, self.resolved_status, self.deadline, self.notes, self.creator_mention, self.respo_mentions, self.cc))
             
             await interaction.followup.send(
-                f"You have selected **{selected_to_change}** as the detail you would like to change.\nIs there any detail of Task {self.task_id} you would like to be changed?\n*Choose **Restart** if you want to restart again from the beginning*.",
+                f"You have selected **{selected_to_change}** as the detail you would like to change.\nWhat **{selected_to_change}** you would like to changed?\n*Choose **Restart** if you want to restart again from the beginning*.",
                 view=view,
                 ephemeral=True
             )  
@@ -1331,7 +1320,7 @@ class ToChangeDropdown(discord.ui.Select):
             view.add_item(ResolvedStatusDropdown("yes", self.task_id, self.task_context, self.task_description, self.task_priority, self.task_status, self.requesting_committee, self.committee_responsible, self.subcommittee_responsible, self.receiving_committee, self.resolved_status, self.deadline, self.notes, self.creator_mention, self.respo_mentions, self.cc))
             
             await interaction.followup.send(
-                f"You have selected **{selected_to_change}** as the detail you would like to change.\nIs there any detail of Task {self.task_id} you would like to be changed?\n*Choose **Restart** if you want to restart again from the beginning*.",
+                f"You have selected **{selected_to_change}** as the detail you would like to change.\nWhat **{selected_to_change}** you would like to changed?\n*Choose **Restart** if you want to restart again from the beginning*.",
                 view=view,
                 ephemeral=True
             )  
@@ -1349,12 +1338,11 @@ class ToChangeDropdown(discord.ui.Select):
 
             if deadline == "R":
 
-                channel_id = 1302238822720868374  # Change this to actual channel ID
-                channel = client.get_channel(channel_id)
+                channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
 
                 embed = discord.Embed(
                 title="UP CAPES Task Ticketing System",
-                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://tinyurl.com/UPCAPES-Task-Sheets",
+                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
                 color=0xffcc1a
                 )
                 embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -1381,12 +1369,11 @@ class ToChangeDropdown(discord.ui.Select):
             await msg.delete()
 
             if notes == "R":
-                channel_id = 1302238822720868374  # Change this to actual channel ID
-                channel = client.get_channel(channel_id)
+                channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
 
                 embed = discord.Embed(
                 title="UP CAPES Task Ticketing System",
-                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://tinyurl.com/UPCAPES-Task-Sheets",
+                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
                 color=0xffcc1a
                 )
                 embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -1414,12 +1401,11 @@ class ToChangeDropdown(discord.ui.Select):
 
             if people == "R":
 
-                channel_id = 1302238822720868374  # Change this to actual channel ID
-                channel = client.get_channel(channel_id)
+                channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
 
                 embed = discord.Embed(
                 title="UP CAPES Task Ticketing System",
-                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://tinyurl.com/UPCAPES-Task-Sheets",
+                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
                 color=0xffcc1a
                 )
                 embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
