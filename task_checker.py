@@ -4,7 +4,7 @@
     and 9 PM and if the program sees that there are tasks that have deadlines in less than 7 days
     or those tasks that are past their deadlines.
 
-    These tasks will be sent to the text channel with the channel ID {CHANNEL_ID} to remind the members
+    These tasks will be sent to the text channel with the channel ID {NOTIFICATIONS_CHANNEL_ID} to remind the members
     of the tasks needed to be done.
 
     If downloaded, Ctrl F niyo lang then type "Change this" to change links, IDs, etc.
@@ -12,7 +12,6 @@
 """
 
 import discord
-import asyncio
 import datetime
 import time
 from discord.ext import commands, tasks
@@ -24,7 +23,7 @@ from apikeys import *
 
 SERVICE_ACCOUNT_FILE = "credentials.json"
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
-SPREADSHEET_ID = "1DLGU03Z-3UxcL-zUGQcv34VonNVQ8tZ8YUaBj3KdSHM" # Change this into spreadsheet ID ng UP CAPES
+SPREADSHEET_ID = "1qQray0kmeoOms-TaKT5WAWekBjIvg7lVcWQT5s_WQSY" # Change this into spreadsheet ID ng UP CAPES
 RANGE_NAME = "Tickets!A:O"
 
 credentials = service_account.Credentials.from_service_account_file(
@@ -32,18 +31,20 @@ credentials = service_account.Credentials.from_service_account_file(
 )
 service = build("sheets", "v4", credentials=credentials)
 
-CHANNEL_ID = 1340238761317105714 # Change this into Channel ID ng text channel
+NOTIFICATIONS_CHANNEL_ID = 1341731835377352714 # Change this into Channel ID ng text channel
 
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix="!", intents=intents)
 
-@tasks.loop(seconds=1)  
+#for debugging, comment out the ones with the hashtags and uncomment @tasks.loop(minutes=1)
+#@tasks.loop(minutes=1)
+@tasks.loop(seconds=1)  #
 async def check_tasks():
     now = datetime.datetime.now()
     current_time = now.strftime("%I:%M %p") 
 
-    if current_time not in ["09:00 AM", "09:00 PM"]:
-        return
+    if current_time not in ["09:00 AM", "09:00 PM"]: #
+        return #
 
     print(f"\nChecking tasks at {now.strftime('%Y-%m-%d %I:%M %p')}")
 
@@ -130,7 +131,7 @@ async def check_tasks():
     if alert_tasks:
         print(f"Found {len(alert_tasks)} tasks to send")
         
-        channel = client.get_channel(CHANNEL_ID)
+        channel = client.get_channel(NOTIFICATIONS_CHANNEL_ID)
         if channel:
             now = datetime.datetime.now().strftime("%B %d, %Y %I:%M %p")
             title = discord.Embed(
