@@ -131,7 +131,7 @@ async def show_embed():
     if channel:
         embed = discord.Embed(
             title="UP CAPES Task Ticketing System",
-            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button\nor modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
+            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button\nor modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
             color=0xffcc1a
         )
 
@@ -306,7 +306,7 @@ class TaskContextDropdown(discord.ui.Select):
 
             embed = discord.Embed(
             title="UP CAPES Task Ticketing System",
-            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
+            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
             color=0xffcc1a
             )
             embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -344,7 +344,7 @@ class TaskContextDropdown(discord.ui.Select):
 
                 embed = discord.Embed(
                 title="UP CAPES Task Ticketing System",
-                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
+                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
                 color=0xffcc1a
                 )
                 embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -400,7 +400,7 @@ class TaskPriorityDropdown(discord.ui.Select):
 
             embed = discord.Embed(
             title="UP CAPES Task Ticketing System",
-            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
+            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
             color=0xffcc1a
             )
             embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -472,7 +472,7 @@ class CommitteeDropdown(discord.ui.Select):
 
                 embed = discord.Embed(
                 title="UP CAPES Task Ticketing System",
-                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
+                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
                 color=0xffcc1a
                 )
                 embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -512,7 +512,7 @@ class CommitteeDropdown(discord.ui.Select):
 
                 embed = discord.Embed(
                 title="UP CAPES Task Ticketing System",
-                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
+                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
                 color=0xffcc1a
                 )
                 embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -552,7 +552,7 @@ class CommitteeDropdown(discord.ui.Select):
 
                 embed = discord.Embed(
                 title="UP CAPES Task Ticketing System",
-                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
+                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
                 color=0xffcc1a
                 )
                 embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -589,7 +589,7 @@ class CommitteeDropdown(discord.ui.Select):
 
                     embed = discord.Embed(
                     title="UP CAPES Task Ticketing System",
-                    description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
+                    description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
                     color=0xffcc1a
                     )
                     embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -615,7 +615,7 @@ class CommitteeDropdown(discord.ui.Select):
 
                         embed = discord.Embed(
                         title="UP CAPES Task Ticketing System",
-                        description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
+                        description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
                         color=0xffcc1a
                         )
                         embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -641,7 +641,7 @@ class CommitteeDropdown(discord.ui.Select):
 
                             embed = discord.Embed(
                             title="UP CAPES Task Ticketing System",
-                            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
+                            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
                             color=0xffcc1a
                             )
                             embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -666,7 +666,7 @@ class CommitteeDropdown(discord.ui.Select):
 
                                 embed = discord.Embed(
                                 title="UP CAPES Task Ticketing System",
-                                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
+                                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
                                 color=0xffcc1a
                                 )
                                 embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -736,7 +736,7 @@ class CommitteeDropdown(discord.ui.Select):
 
                                 embed = discord.Embed(
                                 title="UP CAPES Task Ticketing System",
-                                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button\nor modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
+                                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button\nor modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
                                 color=0xffcc1a
                                 )
                                 
@@ -836,7 +836,7 @@ class SubcommitteeDropdown(discord.ui.Select):
 
             embed = discord.Embed(
             title="UP CAPES Task Ticketing System",
-            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
+            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
             color=0xffcc1a
             )
             embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -907,7 +907,7 @@ class TaskStatusDropdown(discord.ui.Select):
 
             embed = discord.Embed(
             title="UP CAPES Task Ticketing System",
-            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
+            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
             color=0xffcc1a
             )
             embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -959,7 +959,7 @@ class ResolvedStatusDropdown(discord.ui.Select):
 
             embed = discord.Embed(
             title="UP CAPES Task Ticketing System",
-            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
+            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
             color=0xffcc1a
             )
             embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -1017,7 +1017,7 @@ class AnsweredNoneDropdown(discord.ui.Select):
 
             embed = discord.Embed(
             title="UP CAPES Task Ticketing System",
-            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
+            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
             color=0xffcc1a
             )
             embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -1117,7 +1117,7 @@ class AnsweredNoneDropdown(discord.ui.Select):
 
             embed = discord.Embed(
                 title="UP CAPES Task Ticketing System",
-                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
+                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
                 color=0xffcc1a
             )
             embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -1223,7 +1223,7 @@ class ToChangeDropdown(discord.ui.Select):
 
                 embed = discord.Embed(
                 title="UP CAPES Task Ticketing System",
-                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
+                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
                 color=0xffcc1a
                 )
                 embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -1342,7 +1342,7 @@ class ToChangeDropdown(discord.ui.Select):
 
                 embed = discord.Embed(
                 title="UP CAPES Task Ticketing System",
-                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
+                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
                 color=0xffcc1a
                 )
                 embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -1373,7 +1373,7 @@ class ToChangeDropdown(discord.ui.Select):
 
                 embed = discord.Embed(
                 title="UP CAPES Task Ticketing System",
-                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
+                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
                 color=0xffcc1a
                 )
                 embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
@@ -1405,7 +1405,7 @@ class ToChangeDropdown(discord.ui.Select):
 
                 embed = discord.Embed(
                 title="UP CAPES Task Ticketing System",
-                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nupcapes.org/TicketingSystem",
+                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
                 color=0xffcc1a
                 )
                 embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
