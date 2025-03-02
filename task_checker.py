@@ -18,8 +18,7 @@ from discord.ext import commands, tasks
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 
-from apikeys import *
-
+# BOTTOKEN = asdsad
 
 SERVICE_ACCOUNT_FILE = "credentials.json"
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]

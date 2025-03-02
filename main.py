@@ -18,13 +18,10 @@ import task_checker
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 
-
-from apikeys import * 
-
 import subprocess
 subprocess.Popen(["python", "task_checker.py"])
      
-SERVICE_ACCOUNT_FILE = "/home/harryarciga/task-ticketing-system/credentials.json"  # Change this to the path of credentials.json
+SERVICE_ACCOUNT_FILE = "/home/ubuntu/capes-ticketing-system/credentials.json"  # Change this to the path of credentials.json
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 SPREADSHEET_ID = "1qQray0kmeoOms-TaKT5WAWekBjIvg7lVcWQT5s_WQSY"  # Change this to the Google Spreadsheet ID
 RANGE_NAME = "Tickets!B12:B503"  # You may adjust this once the tasks are over 500
@@ -40,6 +37,8 @@ service = build("sheets", "v4", credentials=credentials)
 
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix='!', intents=intents)
+
+# BOTTOKEN = asdjalsdjlajd
 
 def get_next_task_id():
     try:
