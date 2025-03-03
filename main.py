@@ -13,14 +13,16 @@ import discord
 import time
 from discord.ext import commands
 
-import task_checker
+#import task_checker
 
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 
 import subprocess
-subprocess.Popen(["python", "task_checker.py"])
+subprocess.Popen(["python3", "task_checker.py"])
      
+from apikeys import BOTTOKEN
+
 SERVICE_ACCOUNT_FILE = "/home/ubuntu/capes-ticketing-system/credentials.json"  # Change this to the path of credentials.json
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 SPREADSHEET_ID = "1qQray0kmeoOms-TaKT5WAWekBjIvg7lVcWQT5s_WQSY"  # Change this to the Google Spreadsheet ID
@@ -37,8 +39,6 @@ service = build("sheets", "v4", credentials=credentials)
 
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix='!', intents=intents)
-
-# BOTTOKEN = asdjalsdjlajd
 
 def get_next_task_id():
     try:
