@@ -226,10 +226,10 @@ class MyView(discord.ui.View):
                             f"**Resolved Status:** {"Resolved" if resolved_status == "TRUE" else "Not Yet Resolved"}\n"
                             f"**Due Date:** {deadline}\n"
                             f"**Notes:** {notes}\n"
-                            f"**Task Creator:** {creator_mention}\n"
+                            f"**CC:** {creator_mention}\n"
                             f"**Person/s in Charge:** {respo_mentions}\n"
                             f"\n"
-                            f"***CC:** {cc}*"
+                            f"**Task Creator:** {cc}"
                         ),
                         color=0xffcc1a,
                     )
@@ -691,10 +691,10 @@ class CommitteeDropdown(discord.ui.Select):
                                         f"**Receiving Committee:** {selected_receiving_committee}\n"
                                         f"**Due Date:** {deadline}\n"
                                         f"**Notes:** {notes}\n"
-                                        f"**Task Creator:** {creator_mention}\n"
+                                        f"**CC:** {creator_mention}\n"
                                         f"**Person/s in Charge:** {respo_mentions}\n"
                                         f"\n"
-                                        f"***CC:** {cc}*"
+                                        f"**Task Creator:** {cc}"
 
                                     ),
                                     color=0xffcc1a,
@@ -1073,10 +1073,10 @@ class AnsweredNoneDropdown(discord.ui.Select):
                         f"**Task Resolved?** {resolved_status_before if type(self.resolved_status) != str else self.resolved_status}\n"
                         f"**Due Date:** {deadline_before if type(self.deadline) != str else self.deadline}\n"
                         f"**Notes:** {notes_before if type(self.notes) != str else self.notes}\n"
-                        f"**Task Creator:** {creator_before if creator_before == self.creator_mention else self.creator_mention}\n"
+                        f"**CC:** {creator_before if creator_before == self.creator_mention else self.creator_mention}\n"
                         f"**Person/s in Charge:** {respo_before if respo_before == self.respo_mentions else self.respo_mentions}\n"
                         f"\n"
-                        f"***CC:** {cc}*"
+                        f"**Task Creator:** {cc}"
                     ),
                     color=0xffcc1a,
                 )
