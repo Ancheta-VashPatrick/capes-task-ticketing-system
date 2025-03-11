@@ -38,7 +38,8 @@ credentials = service_account.Credentials.from_service_account_file(
 service = build("sheets", "v4", credentials=credentials)
 
 intents = discord.Intents.all()
-client = commands.Bot(command_prefix='!', intents=intents)
+# client = commands.Bot(command_prefix='!', intents=intents)
+client = discord.Bot(intents=intents) ## added this to enable slash commands
 
 def get_next_task_id():
     try:
@@ -262,6 +263,127 @@ class MyView(discord.ui.View):
                     ephemeral=True,
                 )
                 break
+
+
+#### added these
+
+@client.slash_command(name="create", description="Create a new task")
+async def create_task(interaction: discord.Interaction):
+    await interaction.response.send_message(
+        "Please select the **context** of the task:\n*Choose **Restart** if you want to restart again from the beginning*.", 
+        view=DropdownView("task_context","","",""), ephemeral=True
+    )
+
+@client.slash_command(name="edit", description="Edit an existing task")
+async def edit_task(self, interaction: discord.Interaction, button: discord.ui.Button):
+    await interaction.response.send_message(
+        "Please type the **task ID** of the task you wish to change in the chatbox below with this format: 2425-XXXXX",
+        ephemeral=True,
+    )
+    
+
+    def check(msg):
+        return msg.author == interaction.user and msg.channel == interaction.channel
+
+    while True:
+        msg = await client.wait_for("message", check=check)
+        task_id = msg.content.strip()
+        await msg.delete() 
+
+        try:
+            # Get all rows from the sheet
+            result = service.spreadsheets().values().get(
+                spreadsheetId=SPREADSHEET_ID,
+                range="Tickets!A:O"
+            ).execute()
+
+            rows = result.get("values", [])
+            headers = rows[0] 
+            data_rows = rows[1:]
+
+            task_details = None
+            for row in data_rows:
+                if len(row) > 0 and row[0] == task_id:
+                    task_details = row
+                    break
+
+            if task_details:
+                (
+                    task_context,
+                    task_description,
+                    task_priority,
+                    task_status,
+                    requesting_committee,
+                    committee_responsible,
+                    subcommittee_responsible,
+                    receiving_committee,
+                    resolved_status,
+                    deadline,
+                    notes,
+                    creator_mention,
+                    respo_mentions,
+                    cc
+                ) = task_details[1:]
+
+                await interaction.followup.send(
+                    f"Task ID **{task_id}** found!. Here are the details of the task id:",
+                    ephemeral=True,
+                )
+
+
+                embed = discord.Embed(
+                    title=f"Task ID: {task_id}!",
+                    description=(
+                        f"**Task ID:** {task_id}\n"
+                        f"**Task Name:** {task_description}\n"
+                        f"**Task Context:** {task_context}\n"
+                        f"**Task Priority:** {task_priority}\n"
+                        f"**Task Status:** {task_status}\n"
+                        f"**Requesting Committee:** {requesting_committee}\n"
+                        f"**Committee Responsible:** {committee_responsible}\n"
+                        f"**Subcommittee Responsible:** {subcommittee_responsible}\n"
+                        f"**Receiving Committee:** {receiving_committee}\n"
+                        f"**Resolved Status:** {"Resolved" if resolved_status == "TRUE" else "Not Yet Resolved"}\n"
+                        f"**Due Date:** {deadline}\n"
+                        f"**Notes:** {notes}\n"
+                        f"**CC:** {creator_mention}\n"
+                        f"**Person/s in Charge:** {respo_mentions}\n"
+                        f"\n"
+                        f"**Task Creator:** {cc}"
+                    ),
+                    color=0xffcc1a,
+                )
+
+                channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
+
+
+                time.sleep(0.2)
+
+                await interaction.followup.send(embed=embed, ephemeral=True)
+
+
+
+                await interaction.followup.send(
+                    f"Is there anything you wish to change on the task details?\n*Choose **Restart** if you want to restart again from the beginning*.",
+                    view=DropdownView("to_change", task_id, task_context, task_description, task_priority, task_status, requesting_committee, committee_responsible, subcommittee_responsible, receiving_committee, resolved_status, deadline, notes, creator_mention, respo_mentions, cc),
+                    ephemeral=True,
+                )
+
+                break
+            else:
+                await interaction.followup.send(
+                    f"Task ID **{task_id}** was not found. Please try again with a valid Task ID.",
+                    ephemeral=True,
+                )
+        except Exception as e:
+            print(f"Error checking Google Sheets: {e}")
+            await interaction.followup.send(
+                "An error occurred while checking the Task ID. Please try again later.",
+                ephemeral=True,
+            )
+            break
+
+####################
 
 
 class TaskContextDropdown(discord.ui.Select):
