@@ -14,6 +14,7 @@
 import discord
 import datetime
 import time
+import pytz
 from discord.ext import commands, tasks
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
@@ -34,12 +35,14 @@ TASK_MANAGEMENT_CHANNEL_ID = 1341731679223418921  # Change this into Channel ID 
 
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix="!", intents=intents)
+ph_tz = pytz.timezone("Asia/Manila") ## added this
 
 #for debugging, comment out the ones with the hashtags and uncomment @tasks.loop(minutes=1)
 #@tasks.loop(minutes=1)
-@tasks.loop(seconds=1)  #
+#@tasks.loop(seconds=1)  #
+@tasks.loop(hours=12) ## added this
 async def check_tasks():
-    now = datetime.datetime.now()
+    now = datetime.datetime.now(ph_tz) ## added this
     current_time = now.strftime("%I:%M %p") 
 
     if current_time not in ["09:00 AM", "09:00 PM"]: #
@@ -101,6 +104,7 @@ async def check_tasks():
 
             try:
                 deadline_date = datetime.datetime.strptime(deadline, "%m/%d/%Y %H:%M")
+                deadline_date = ph_tz.localize(deadline_date) ## added this
             except ValueError:
                 print(f"Invalid date format for task {task_id}: {deadline}")
                 continue
