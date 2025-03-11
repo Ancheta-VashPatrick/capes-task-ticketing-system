@@ -4,7 +4,7 @@
     and 9 PM and if the program sees that there are tasks that have deadlines in less than 7 days
     or those tasks that are past their deadlines.
 
-    These tasks will be sent to the text channel with the channel ID {NOTIFICATIONS_CHANNEL_ID} to remind the members
+    These tasks will be sent to the text channel with the channel ID {TASK_MANAGEMENT_CHANNEL_ID} to remind the members
     of the tasks needed to be done.
 
     If downloaded, Ctrl F niyo lang then type "Change this" to change links, IDs, etc.
@@ -31,7 +31,7 @@ credentials = service_account.Credentials.from_service_account_file(
 )
 service = build("sheets", "v4", credentials=credentials)
 
-NOTIFICATIONS_CHANNEL_ID = 1341731835377352714 # Change this into Channel ID ng text channel
+TASK_MANAGEMENT_CHANNEL_ID = 1341731835377352714 # Change this into Channel ID ng text channel
 
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix="!", intents=intents)
@@ -131,7 +131,7 @@ async def check_tasks():
     if alert_tasks:
         print(f"Found {len(alert_tasks)} tasks to send")
         
-        channel = client.get_channel(NOTIFICATIONS_CHANNEL_ID)
+        channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
         if channel:
             now = datetime.datetime.now().strftime("%B %d, %Y %I:%M %p")
             title = discord.Embed(

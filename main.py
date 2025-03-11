@@ -31,7 +31,7 @@ RANGE_NAME = "Tickets!B12:B503"  # You may adjust this once the tasks are over 5
 
 TASK_MANAGEMENT_CHANNEL_ID = 1341731679223418921 
 UP_CAPES_SERVER_ID = 1279363702889644082
-NOTIFICATIONS_CHANNEL_ID = 1341731835377352714 
+#NOTIFICATIONS_CHANNEL_ID = 1341731835377352714 
 
 credentials = service_account.Credentials.from_service_account_file(
     SERVICE_ACCOUNT_FILE, scopes=SCOPES
@@ -703,7 +703,7 @@ class CommitteeDropdown(discord.ui.Select):
 
                                 
                                 target_guild = client.get_guild(UP_CAPES_SERVER_ID) # Change this to actual server ID
-                                target_channel = target_guild.get_channel(NOTIFICATIONS_CHANNEL_ID) # Change this to actual channel ID
+                                target_channel = target_guild.get_channel(TASK_MANAGEMENT_CHANNEL_ID) # Change this to actual channel ID
 
                                 if target_channel:
                                     await target_channel.send(embed=embed)
@@ -1086,7 +1086,7 @@ class AnsweredNoneDropdown(discord.ui.Select):
             await interaction.followup.send(embed=embed, ephemeral=True)
 
             target_guild = client.get_guild(UP_CAPES_SERVER_ID) # Change this to actual server ID
-            target_channel = target_guild.get_channel(NOTIFICATIONS_CHANNEL_ID) # Change this to actual channel ID
+            target_channel = target_guild.get_channel(TASK_MANAGEMENT_CHANNEL_ID) # Change this to actual channel ID
 
             if target_channel:
                 await target_channel.send(embed=embed)
