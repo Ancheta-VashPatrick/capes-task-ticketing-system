@@ -1,3 +1,4 @@
+
 """
     This main.py file is responsible for running the task ticketing system itself. Please
     ask Harry Arciga for credentials.json and apikeys.py since these files can't be shared in
@@ -13,25 +14,37 @@ import discord
 import time
 from discord.ext import commands
 
-import task_checker
+#import task_checker
 
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 
-
-from apikeys import * 
-
 import subprocess
-subprocess.Popen(["python", "task_checker.py"])
+subprocess.Popen(["python3", "task_checker.py"])
      
-SERVICE_ACCOUNT_FILE = "/home/harryarciga/task-ticketing-system/credentials.json"  # Change this to the path of credentials.json
+from apikeys import BOTTOKEN
+
+SERVICE_ACCOUNT_FILE = "credentials.json"  # Change this to the path of credentials.json
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 SPREADSHEET_ID = "1qQray0kmeoOms-TaKT5WAWekBjIvg7lVcWQT5s_WQSY"  # Change this to the Google Spreadsheet ID
-RANGE_NAME = "Tickets!B12:B503"  # You may adjust this once the tasks are over 500
+RANGE_NAME = "Tickets!B:B"  # You may adjust this once the tasks are over 500
 
 TASK_MANAGEMENT_CHANNEL_ID = 1341731679223418921 
 UP_CAPES_SERVER_ID = 1279363702889644082
 #NOTIFICATIONS_CHANNEL_ID = 1341731835377352714 
+
+CREATE_EMBED = discord.Embed(
+            title="UP CAPES Task Ticketing System",
+            description="Welcome to UP CAPES Task Ticketing System!\n\nSince you called me, **Ticky**, through **/create** command,\n you can now assign tasks to UP CAPES members!\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
+            color=0xffcc1a
+        )
+
+MODIFY_EMBED = discord.Embed(
+            title="UP CAPES Task Ticketing System",
+            description="Welcome to UP CAPES Task Ticketing System!\n\nSince you called me, **Ticky**, through **/edit** command,\n you can now modify the tasks of UP CAPES members!\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
+            color=0xffcc1a
+        )
+
 
 credentials = service_account.Credentials.from_service_account_file(
     SERVICE_ACCOUNT_FILE, scopes=SCOPES
@@ -39,7 +52,10 @@ credentials = service_account.Credentials.from_service_account_file(
 service = build("sheets", "v4", credentials=credentials)
 
 intents = discord.Intents.all()
-client = commands.Bot(command_prefix='!', intents=intents)
+client = commands.Bot(command_prefix='/', intents=intents)
+
+
+
 
 def get_next_task_id():
     try:
@@ -71,7 +87,7 @@ def add_to_google_sheets(data):
             .values()
             .append(
                 spreadsheetId=SPREADSHEET_ID,
-                range="Tickets!A:O",
+                range="Tickets!A:P",
                 valueInputOption="USER_ENTERED",
                 body=body,
             )
@@ -85,7 +101,7 @@ def update_task_in_google_sheets(task_id, updated_data):
     try:
         result = service.spreadsheets().values().get(
             spreadsheetId=SPREADSHEET_ID,
-            range="Tickets!A:O"
+            range="Tickets!A:P"
         ).execute()
 
         rows = result.get("values", [])
@@ -105,7 +121,7 @@ def update_task_in_google_sheets(task_id, updated_data):
             print(f"Task ID {task_id} not found in the sheet.")
             return
 
-        update_range = f"Tickets!A{row_index}:O{row_index}"
+        update_range = f"Tickets!A{row_index}:P{row_index}"
 
         body = {
             "values": [updated_data]
@@ -122,90 +138,81 @@ def update_task_in_google_sheets(task_id, updated_data):
     except Exception as e:
         print(f"Error updating task in Google Sheets: {e}")
 
-async def show_embed():
-    print("The bot is now ready for use!")
-    print("-----------------------------")
-
-    channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
-
-    if channel:
-        embed = discord.Embed(
-            title="UP CAPES Task Ticketing System",
-            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button\nor modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
-            color=0xffcc1a
-        )
-
-        view = MyView()
-
-        await channel.send(embed=embed, view=view)
-    else:
-        print(f"Channel with ID {channel_id} not found.")
-
 
 @client.event
 async def on_ready():
-    await show_embed() 
+    await client.tree.sync()
 
-class MyView(discord.ui.View):
-    def __init__(self):
-        super().__init__(timeout=None)
+    #await client.tree.sync()
+    print("The bot is now ready for use!")
+    print("-----------------------------")
 
-    @discord.ui.button(label="Create Task", style=discord.ButtonStyle.primary)
-    async def create_task(self, interaction: discord.Interaction, button: discord.ui.Button):
 
-        await interaction.response.send_message("Please select the **context** of the task:\n*Choose **Restart** if you want to restart again from the beginning*.", view=DropdownView("task_context","","",""), ephemeral=True)
+#### ===================================================
 
-    @discord.ui.button(label="Edit Task", style=discord.ButtonStyle.secondary)
-    async def edit_task(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await interaction.response.send_message(
-            "Please type the **task ID** of the task you wish to change in the chatbox below with this format: 2425-XXXXX",
-            ephemeral=True,
-        )
-        
+@client.tree.command(name="create", description="Create a new task")
+async def create_task(interaction: discord.Interaction):
+    await interaction.response.send_message(embed=CREATE_EMBED, ephemeral=True)
+    await interaction.followup.send(
+        "Please select the **context** of the task:\n*Choose **Restart** if you want to restart again from the beginning*.", 
+        view=DropdownView("task_context", "", "", ""), 
+        ephemeral=True
+    )
+@client.tree.command(name="edit", description="Edit an existing task")
+async def edit_task(interaction: discord.Interaction):
+    await interaction.response.send_message(embed=MODIFY_EMBED, ephemeral=True)
+    await interaction.followup.send(
+        "Please type the **task ID** of the task you wish to change in the chatbox below with this format: 2425-XXXXX",
+        ephemeral=True,
+    )
+    
 
-        def check(msg):
-            return msg.author == interaction.user and msg.channel == interaction.channel
+    def check(msg):
+        return msg.author == interaction.user and msg.channel == interaction.channel
 
-        while True:
-            msg = await client.wait_for("message", check=check)
-            task_id = msg.content.strip()
-            await msg.delete() 
+    cc = interaction.user.mention
+    while True:
+        msg = await client.wait_for("message", check=check)
+        task_id = msg.content.strip()
+        await msg.delete() 
 
-            try:
-                # Get all rows from the sheet
-                result = service.spreadsheets().values().get(
-                    spreadsheetId=SPREADSHEET_ID,
-                    range="Tickets!A:O"
-                ).execute()
+        try:
+            # Get all rows from the sheet
+            result = service.spreadsheets().values().get(
+                spreadsheetId=SPREADSHEET_ID,
+                range="Tickets!A:P"
+            ).execute()
 
-                rows = result.get("values", [])
-                headers = rows[0] 
-                data_rows = rows[1:]
+            rows = result.get("values", [])
+            headers = rows[0] 
+            data_rows = rows[1:]
 
-                task_details = None
-                for row in data_rows:
-                    if len(row) > 0 and row[0] == task_id:
-                        task_details = row
-                        break
+            task_details = None
+            for row in data_rows:
+                if len(row) > 0 and row[0] == task_id:
+                    task_details = row
+                    break
 
-                if task_details:
-                    (
-                        task_context,
-                        task_description,
-                        task_priority,
-                        task_status,
-                        requesting_committee,
-                        committee_responsible,
-                        subcommittee_responsible,
-                        receiving_committee,
-                        resolved_status,
-                        deadline,
-                        notes,
-                        creator_mention,
-                        respo_mentions,
-                        cc
-                    ) = task_details[1:]
+            if task_details:
+                (
+                    task_context,
+                    task_description,
+                    task_priority,
+                    task_status,
+                    requesting_committee,
+                    committee_responsible,
+                    subcommittee_responsible,
+                    receiving_committee,
+                    resolved_status,
+                    deadline,
+                    notes,
+                    creator_mention,
+                    respo_mentions,
+                    cc_on_sheets,
+                    receiving_channel_id
+                ) = task_details[1:]
 
+                if (cc == cc_on_sheets or cc in creator_mention or cc in respo_mentions):
                     await interaction.followup.send(
                         f"Task ID **{task_id}** found!. Here are the details of the task id:",
                         ephemeral=True,
@@ -227,21 +234,16 @@ class MyView(discord.ui.View):
                             f"**Resolved Status:** {"Resolved" if resolved_status == "TRUE" else "Not Yet Resolved"}\n"
                             f"**Due Date:** {deadline}\n"
                             f"**Notes:** {notes}\n"
-                            f"**Task Creator:** {creator_mention}\n"
+                            f"**CC:** {creator_mention}\n"
                             f"**Person/s in Charge:** {respo_mentions}\n"
+                            f"**Receiving Channel:** {receiving_channel_id}"
                             f"\n"
-                            f"***CC:** {cc}*"
+                            f"**Task Creator:** {cc}"
                         ),
                         color=0xffcc1a,
                     )
 
-                    channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
-
-
-                    time.sleep(0.2)
-
                     await interaction.followup.send(embed=embed, ephemeral=True)
-
 
 
                     await interaction.followup.send(
@@ -253,16 +255,20 @@ class MyView(discord.ui.View):
                     break
                 else:
                     await interaction.followup.send(
-                        f"Task ID **{task_id}** was not found. Please try again with a valid Task ID.",
-                        ephemeral=True,
-                    )
-            except Exception as e:
-                print(f"Error checking Google Sheets: {e}")
+                        f"You are not allowed to edit Task ID **{task_id}**.\nPlease try again with other tasks.", ephemeral=True,)
+            else:
                 await interaction.followup.send(
-                    "An error occurred while checking the Task ID. Please try again later.",
+                    f"Task ID **{task_id}** was not found. Please try again with a valid Task ID.",
                     ephemeral=True,
                 )
-                break
+        except Exception as e:
+            print(f"Error checking Google Sheets: {e}")
+            await interaction.followup.send(
+                "An error occurred while checking the Task ID. Please try again later",
+                ephemeral=True,
+            )
+
+####################
 
 
 class TaskContextDropdown(discord.ui.Select):
@@ -302,25 +308,17 @@ class TaskContextDropdown(discord.ui.Select):
         if selected_context == "Restart":
             await interaction.response.defer()
 
-            channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
-
-            embed = discord.Embed(
-            title="UP CAPES Task Ticketing System",
-            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
-            color=0xffcc1a
+            await interaction.response.send_message(
+                "Please select the **context** of the task:\n*Choose **Restart** if you want to restart again from the beginning*.", 
+                view=DropdownView("task_context","","",""), ephemeral=True
             )
-            embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
-
-            view = MyView()
-
-            await interaction.followup.send(embed=embed, view=view, ephemeral=True)
 
         elif self.change == "yes" and selected_context != "Restart":
             await interaction.response.defer(ephemeral=True)
             
             await interaction.followup.send(
                 f"You have selected **{selected_context}** as your context.\nIs there anything you wish to change on the task details?\n*Choose **Restart** if you want to restart again from the beginning*.",
-                view=DropdownView("to_change", self.task_id, selected_context, self.task_description, self.task_priority, self.task_status, self.requesting_committee, self.committee_responsible, self.subcommittee_responsible, self.receiving_committee, self.resolved_status, self.deadline, self.notes, self.creator_mention, self.respo_mentions, self.cc),
+                view=DropdownView("to_change", self.task_id, selected_context, self.task_name, self.task_priority, self.task_status, self.requesting_committee, self.committee_responsible, self.subcommittee_responsible, self.receiving_committee, self.resolved_status, self.deadline, self.notes, self.creator_mention, self.respo_mentions, self.cc),
                 ephemeral=True
             )
             
@@ -340,18 +338,10 @@ class TaskContextDropdown(discord.ui.Select):
             await msg.delete() 
 
             if task_name == "R":
-                channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
-
-                embed = discord.Embed(
-                title="UP CAPES Task Ticketing System",
-                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
-                color=0xffcc1a
+                await interaction.response.send_message(
+                    "Please select the **context** of the task:\n*Choose **Restart** if you want to restart again from the beginning*.", 
+                    view=DropdownView("task_context","","",""), ephemeral=True
                 )
-                embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
-
-                view = MyView()
-
-                await interaction.followup.send(embed=embed, view=view, ephemeral=True)
 
             else:
                 await interaction.followup.send(
@@ -396,18 +386,11 @@ class TaskPriorityDropdown(discord.ui.Select):
         if selected_priority == "Restart":
             await interaction.response.defer()
 
-            channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
-
-            embed = discord.Embed(
-            title="UP CAPES Task Ticketing System",
-            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
-            color=0xffcc1a
+            await interaction.response.send_message(
+                "Please select the **context** of the task:\n*Choose **Restart** if you want to restart again from the beginning*.", 
+                view=DropdownView("task_context","","",""), ephemeral=True
             )
-            embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
 
-            view = MyView()
-
-            await interaction.followup.send(embed=embed, view=view, ephemeral=True)
 
         elif self.change == "yes" and selected_priority != "Restart":
             await interaction.response.defer(ephemeral=True)
@@ -468,18 +451,11 @@ class CommitteeDropdown(discord.ui.Select):
             if sel_requesting_committee == "Restart":
                 await interaction.response.defer() 
 
-                channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
-
-                embed = discord.Embed(
-                title="UP CAPES Task Ticketing System",
-                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
-                color=0xffcc1a
+                await interaction.response.send_message(
+                    "Please select the **context** of the task:\n*Choose **Restart** if you want to restart again from the beginning*.", 
+                    view=DropdownView("task_context","","",""), ephemeral=True
                 )
-                embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
 
-                view = MyView()
-
-                await interaction.followup.send(embed=embed, view=view, ephemeral=True)
 
             elif self.change == "yes" and sel_requesting_committee != "Restart":
                 await interaction.response.defer(ephemeral=True)
@@ -508,18 +484,11 @@ class CommitteeDropdown(discord.ui.Select):
             if committee_responsible == "Restart":
                 await interaction.response.defer()
 
-                channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
-
-                embed = discord.Embed(
-                title="UP CAPES Task Ticketing System",
-                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
-                color=0xffcc1a
+                await interaction.response.send_message(
+                    "Please select the **context** of the task:\n*Choose **Restart** if you want to restart again from the beginning*.", 
+                    view=DropdownView("task_context","","",""), ephemeral=True
                 )
-                embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
 
-                view = MyView()
-
-                await interaction.followup.send(embed=embed, view=view, ephemeral=True)
             elif self.change == "yes" and committee_responsible != "Restart":
                 await interaction.response.defer(ephemeral=True)
 
@@ -548,18 +517,10 @@ class CommitteeDropdown(discord.ui.Select):
             if selected_receiving_committee == "Restart":
                 await interaction.response.defer() 
 
-                channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
-
-                embed = discord.Embed(
-                title="UP CAPES Task Ticketing System",
-                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
-                color=0xffcc1a
+                await interaction.response.send_message(
+                    "Please select the **context** of the task:\n*Choose **Restart** if you want to restart again from the beginning*.", 
+                    view=DropdownView("task_context","","",""), ephemeral=True
                 )
-                embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
-
-                view = MyView()
-
-                await interaction.followup.send(embed=embed, view=view, ephemeral=True)
 
             elif self.change == "yes" and selected_receiving_committee != "Restart":
                 await interaction.response.defer(ephemeral=True)
@@ -584,19 +545,10 @@ class CommitteeDropdown(discord.ui.Select):
                 await deadline_msg.delete()
 
                 if deadline == "R":
-
-                    channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
-
-                    embed = discord.Embed(
-                    title="UP CAPES Task Ticketing System",
-                    description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
-                    color=0xffcc1a
+                    await interaction.response.send_message(
+                        "Please select the **context** of the task:\n*Choose **Restart** if you want to restart again from the beginning*.", 
+                        view=DropdownView("task_context","","",""), ephemeral=True
                     )
-                    embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
-
-                    view = MyView()
-
-                    await interaction.followup.send(embed=embed, view=view, ephemeral=True)
 
                 else:
 
@@ -610,24 +562,15 @@ class CommitteeDropdown(discord.ui.Select):
                     await notes_msg.delete()
 
                     if notes == "R":
-
-                        channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
-
-                        embed = discord.Embed(
-                        title="UP CAPES Task Ticketing System",
-                        description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
-                        color=0xffcc1a
+                        await interaction.response.send_message(
+                            "Please select the **context** of the task:\n*Choose **Restart** if you want to restart again from the beginning*.", 
+                            view=DropdownView("task_context","","",""), ephemeral=True
                         )
-                        embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
-
-                        view = MyView()
-
-                        await interaction.followup.send(embed=embed, view=view, ephemeral=True)
 
                     else:
 
                         await interaction.followup.send(
-                            f"You wrote **{notes}** as your note. Please mention **your Discord account** as the creator of this task.\nExample: @YourName\n*Type **R** if you want to restart again from the beginning*.",
+                            f"You wrote **{notes}** as your note. Please mention **your Discord account** as the person to be in CC.\nExample: @YourName\n*Type **R** if you want to restart again from the beginning*.",
                             ephemeral=True,
                             )
 
@@ -636,23 +579,14 @@ class CommitteeDropdown(discord.ui.Select):
                         await creator_mention_msg.delete() 
 
                         if creator_mention == "R":
-
-                            channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
-
-                            embed = discord.Embed(
-                            title="UP CAPES Task Ticketing System",
-                            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
-                            color=0xffcc1a
-                            )
-                            embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
-
-                            view = MyView()
-
-                            await interaction.followup.send(embed=embed, view=view, ephemeral=True)
+                            await interaction.response.send_message(
+                            "Please select the **context** of the task:\n*Choose **Restart** if you want to restart again from the beginning*.", 
+                            view=DropdownView("task_context","","",""), ephemeral=True
+                        )
 
                         else:
                             await interaction.followup.send(
-                                f"You tagged {creator_mention} as the task creator. Lastly, please mention the **specific person/s responsible** for the task.\nExample: @Juan @joaquin23\n*Type **Restart** if you want to restart again from the beginning*.",
+                                f"You tagged {creator_mention} as the person to be in CC. Now, please mention the **specific person/s responsible** for the task.\nExample: @Juan @joaquin23\n*Type **Restart** if you want to restart again from the beginning*.",
                                 ephemeral=True,
                                 )
                             respo_mentions_msg = await client.wait_for("message", check=check)
@@ -660,22 +594,18 @@ class CommitteeDropdown(discord.ui.Select):
                             await respo_mentions_msg.delete() 
 
                             if respo_mentions == "R":
-                                await interaction.response.defer()  
-
-                                channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
-
-                                embed = discord.Embed(
-                                title="UP CAPES Task Ticketing System",
-                                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
-                                color=0xffcc1a
+                                await interaction.response.send_message(
+                                    "Please select the **context** of the task:\n*Choose **Restart** if you want to restart again from the beginning*.", 
+                                    view=DropdownView("task_context","","",""), ephemeral=True
                                 )
-                                embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
-
-                                view = MyView()
-
-                                await interaction.followup.send(embed=embed, view=view, ephemeral=True)
-
                             else:
+                                await interaction.followup.send(
+                                f"You tagged {respo_mentions} as the specific person/s responsible for the task.\nLastly, please mention the **channel** that will receive the task notification\nExample: #announcements", #IEDIT MO RIN ITO
+                                ephemeral=True,
+                                )
+                                receiving_channel_id_msg = await client.wait_for("message", check=check)
+                                receiving_channel_id = receiving_channel_id_msg.content.strip()
+                                await receiving_channel_id_msg.delete() 
 
                                 task_id = get_next_task_id() 
 
@@ -692,25 +622,18 @@ class CommitteeDropdown(discord.ui.Select):
                                         f"**Receiving Committee:** {selected_receiving_committee}\n"
                                         f"**Due Date:** {deadline}\n"
                                         f"**Notes:** {notes}\n"
-                                        f"**Task Creator:** {creator_mention}\n"
+                                        f"**CC:** {creator_mention}\n"
                                         f"**Person/s in Charge:** {respo_mentions}\n"
+                                        f"**Receiving Channel ID:** {receiving_channel_id}\n"
                                         f"\n"
-                                        f"***CC:** {cc}*"
-
+                                        f"**Task Creator:** {cc}"
                                     ),
                                     color=0xffcc1a,
                                 )
 
+                                #print(receiving_channel_id)
+                                #print(type(receiving_channel_id))
                                 
-                                target_guild = client.get_guild(UP_CAPES_SERVER_ID) # Change this to actual server ID
-                                target_channel = target_guild.get_channel(TASK_MANAGEMENT_CHANNEL_ID) # Change this to actual channel ID
-
-                                if target_channel:
-                                    await target_channel.send(embed=embed)
-                                else:
-                                    print('lala')
-
-
                                 add_to_google_sheets([
                                     "",
                                     self.context,
@@ -726,25 +649,17 @@ class CommitteeDropdown(discord.ui.Select):
                                     notes,
                                     creator_mention,
                                     respo_mentions,
-                                    cc
+                                    cc,
+                                    receiving_channel_id
                                 ])
+                                receiving_channel_id = int(receiving_channel_id[2:-1])
+                                channel = client.get_channel(receiving_channel_id) 
 
-
-                                await interaction.followup.send(embed=embed, ephemeral=True)
-
-                                channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
-
-                                embed = discord.Embed(
-                                title="UP CAPES Task Ticketing System",
-                                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button\nor modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
-                                color=0xffcc1a
-                                )
-                                
-                                view = MyView()
-
-                                time.sleep(0.3)
-
-                                await interaction.followup.send(embed=embed, view=view, ephemeral=True)
+                                if channel:
+                                    await channel.send(embed=embed)
+                                    await interaction.followup.send("Your ticket details are now added to the UP CAPES Task Ticketing System Sheets:\nhttps://upcapes.org/TicketingSystem", ephemeral=True)
+                                else:
+                                    await interaction.followup.send("Receiving channel not found. Please type /create again to try again.", ephemeral=True)
 
 
 class SubcommitteeDropdown(discord.ui.Select):
@@ -831,19 +746,10 @@ class SubcommitteeDropdown(discord.ui.Select):
         selected_subcommittee = self.values[0]
         if selected_subcommittee == "Restart":
             await interaction.response.defer()  
-
-            channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
-
-            embed = discord.Embed(
-            title="UP CAPES Task Ticketing System",
-            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
-            color=0xffcc1a
-            )
-            embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
-
-            view = MyView()
-
-            await interaction.followup.send(embed=embed, view=view, ephemeral=True)
+            await interaction.response.send_message(
+                            "Please select the **context** of the task:\n*Choose **Restart** if you want to restart again from the beginning*.", 
+                            view=DropdownView("task_context","","",""), ephemeral=True
+                        )
 
         elif self.change == "yes" != selected_subcommittee != "Restart":
             await interaction.response.defer(ephemeral=True)
@@ -902,19 +808,10 @@ class TaskStatusDropdown(discord.ui.Select):
         selected_task_status = self.values[0]
         if selected_task_status == "Restart":
             await interaction.response.defer() 
-
-            channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
-
-            embed = discord.Embed(
-            title="UP CAPES Task Ticketing System",
-            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
-            color=0xffcc1a
-            )
-            embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
-
-            view = MyView()
-
-            await interaction.followup.send(embed=embed, view=view, ephemeral=True)
+            await interaction.response.send_message(
+                            "Please select the **context** of the task:\n*Choose **Restart** if you want to restart again from the beginning*.", 
+                            view=DropdownView("task_context","","",""), ephemeral=True
+                        )
 
         else:
             await interaction.followup.send(
@@ -954,19 +851,10 @@ class ResolvedStatusDropdown(discord.ui.Select):
         selected_resolved_status = self.values[0]
         if selected_resolved_status  == "Restart":
             await interaction.response.defer()
-
-            channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
-
-            embed = discord.Embed(
-            title="UP CAPES Task Ticketing System",
-            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
-            color=0xffcc1a
-            )
-            embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
-
-            view = MyView()
-
-            await interaction.followup.send(embed=embed, view=view, ephemeral=True)
+            await interaction.response.send_message(
+                            "Please select the **context** of the task:\n*Choose **Restart** if you want to restart again from the beginning*.", 
+                            view=DropdownView("task_context","","",""), ephemeral=True
+                        )
         elif selected_resolved_status == "True":
             await interaction.followup.send(
             f"You have selected **{selected_resolved_status}** as the resolved status of the task.\nIs there anything you wish to change on the task details?\n*Choose **Restart** if you want to restart again from the beginning*.",
@@ -1012,23 +900,15 @@ class AnsweredNoneDropdown(discord.ui.Select):
         selected_resolved_status = self.values[0]
         if selected_resolved_status == "Restart":
             await interaction.response.defer()  
+            await interaction.response.send_message(
+                            "Please select the **context** of the task:\n*Choose **Restart** if you want to restart again from the beginning*.", 
+                            view=DropdownView("task_context","","",""), ephemeral=True
+                        )
 
-            channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
-
-            embed = discord.Embed(
-            title="UP CAPES Task Ticketing System",
-            description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
-            color=0xffcc1a
-            )
-            embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
-
-            view = MyView()
-
-            await interaction.followup.send(embed=embed, view=view, ephemeral=True)
         elif selected_resolved_status == "Yes":
             result = service.spreadsheets().values().get(
                     spreadsheetId=SPREADSHEET_ID,
-                    range="Tickets!A:O"  
+                    range="Tickets!A:P"  
                 ).execute()
 
             rows = result.get("values", [])
@@ -1055,8 +935,24 @@ class AnsweredNoneDropdown(discord.ui.Select):
                     deadline_before,
                     notes_before,
                     creator_before,
-                    respo_before
-                ) = task_details[1:14]  
+                    respo_before,
+                    cc,
+                    receiving_channel_id_before
+                ) = task_details[1:16]  
+
+
+            await interaction.response.send_message(
+                f"Lastly, please mention the **channel** that will receive the task notification\nExample: #announcements", #IEDIT MO RIN ITO
+                ephemeral=True,
+                )
+
+            def check(msg):
+                return msg.author == interaction.user and msg.channel == interaction.channel
+
+            receiving_channel_id_msg = await client.wait_for("message", check=check)
+            receiving_channel_id = receiving_channel_id_msg.content.strip()
+            await receiving_channel_id_msg.delete() 
+
 
 
             embed = discord.Embed(
@@ -1074,59 +970,43 @@ class AnsweredNoneDropdown(discord.ui.Select):
                         f"**Task Resolved?** {resolved_status_before if type(self.resolved_status) != str else self.resolved_status}\n"
                         f"**Due Date:** {deadline_before if type(self.deadline) != str else self.deadline}\n"
                         f"**Notes:** {notes_before if type(self.notes) != str else self.notes}\n"
-                        f"**Task Creator:** {creator_before if creator_before == self.creator_mention else self.creator_mention}\n"
+                        f"**CC:** {creator_before if creator_before == self.creator_mention else self.creator_mention}\n"
                         f"**Person/s in Charge:** {respo_before if respo_before == self.respo_mentions else self.respo_mentions}\n"
+                        f"**Receiving Channel ID:** {receiving_channel_id}\n"
                         f"\n"
-                        f"***CC:** {cc}*"
+                        f"**Task Creator:** {cc}"
                     ),
                     color=0xffcc1a,
                 )
 
-            await interaction.response.defer(ephemeral=True)
-            await interaction.followup.send(embed=embed, ephemeral=True)
+            parsed_receiving_channel_id = int(receiving_channel_id[2:-1])
+            channel = client.get_channel(parsed_receiving_channel_id) 
 
-            target_guild = client.get_guild(UP_CAPES_SERVER_ID) # Change this to actual server ID
-            target_channel = target_guild.get_channel(TASK_MANAGEMENT_CHANNEL_ID) # Change this to actual channel ID
+            if channel:
+                update_task_in_google_sheets(self.task_id,[
+                    '',
+                    task_context_before if type(self.task_context) != str else self.task_context,
+                    task_description_before if type(self.task_description) != str else self.task_description,
+                    task_priority_before if type(self.task_priority) != str else self.task_priority,
+                    task_status_before if type(self.task_status) != str else self.task_status,
+                    requesting_committee_before if type(self.requesting_committee) != str else self.requesting_committee,
+                    committee_responsible_before if type(self.committee_responsible) != str else self.committee_responsible,
+                    subcommittee_responsible_before if type(self.subcommittee_responsible) != str else self.subcommittee_responsible,
+                    receiving_committee_before if type(self.receiving_committee) != str else self.receiving_committee,
+                    resolved_status_before if type(self.resolved_status) != str else self.resolved_status,
+                    deadline_before if type(self.deadline) != str else self.deadline,
+                    notes_before if type(self.notes) != str else self.notes,
+                    creator_before if creator_before == self.creator_mention else self.creator_mention,
+                    respo_before if respo_before == self.respo_mentions else self.respo_mentions,
+                    cc,
+                    receiving_channel_id
+                ])
+                await channel.send(embed=embed)
+                await interaction.followup.send(f"The task details for task **{self.task_id}** are now modified in the UP CAPES Task Ticketing System Sheets: https://upcapes.org/TicketingSystem", ephemeral=True)
 
-            if target_channel:
-                await target_channel.send(embed=embed)
             else:
-                print('lala')
-
-            update_task_in_google_sheets(self.task_id,[
-                '',
-                task_context_before if type(self.task_context) != str else self.task_context,
-                task_description_before if type(self.task_description) != str else self.task_description,
-                task_priority_before if type(self.task_priority) != str else self.task_priority,
-                task_status_before if type(self.task_status) != str else self.task_status,
-                requesting_committee_before if type(self.requesting_committee) != str else self.requesting_committee,
-                committee_responsible_before if type(self.committee_responsible) != str else self.committee_responsible,
-                subcommittee_responsible_before if type(self.subcommittee_responsible) != str else self.subcommittee_responsible,
-                receiving_committee_before if type(self.receiving_committee) != str else self.receiving_committee,
-                resolved_status_before if type(self.resolved_status) != str else self.resolved_status,
-                deadline_before if type(self.deadline) != str else self.deadline,
-                notes_before if type(self.notes) != str else self.notes,
-                creator_before if creator_before == self.creator_mention else self.creator_mention,
-                respo_before if respo_before == self.respo_mentions else self.respo_mentions,
-                cc
-            ])
-
-            await interaction.followup.send(embed=embed, ephemeral=True)
-
-            channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
-
-            embed = discord.Embed(
-                title="UP CAPES Task Ticketing System",
-                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
-                color=0xffcc1a
-            )
-            embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
+                await interaction.followup.send("Receiving channel not found. Please type /create again to try again.",ephemeral=True)
             
-            view = MyView()
-
-            time.sleep(2)
-
-            await interaction.followup.send(embed=embed, view=view, ephemeral=True)
 
         else:
             await interaction.followup.send(
@@ -1183,7 +1063,7 @@ class ToChangeDropdown(discord.ui.Select):
             discord.SelectOption(label="Resolved Status"),
             discord.SelectOption(label="Deadline"),
             discord.SelectOption(label="Notes"),
-            discord.SelectOption(label="Task Creator"),
+            discord.SelectOption(label="CC"),
             discord.SelectOption(label="Person/s in Charge"),
             discord.SelectOption(label="None"),
             discord.SelectOption(label="Restart", description="Choose this if you want to start again from the beginning.")
@@ -1218,19 +1098,10 @@ class ToChangeDropdown(discord.ui.Select):
             msg = await client.wait_for("message", check=check)
             task_name = msg.content  
             if task_name == "R":
-
-                channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
-
-                embed = discord.Embed(
-                title="UP CAPES Task Ticketing System",
-                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
-                color=0xffcc1a
-                )
-                embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
-
-                view = MyView()
-
-                await interaction.followup.send(embed=embed, view=view, ephemeral=True)
+                await interaction.response.send_message(
+                            "Please select the **context** of the task:\n*Choose **Restart** if you want to restart again from the beginning*.", 
+                            view=DropdownView("task_context","","",""), ephemeral=True
+                        )
 
             else:
                 await interaction.followup.send(
@@ -1337,19 +1208,10 @@ class ToChangeDropdown(discord.ui.Select):
             await msg.delete() 
 
             if deadline == "R":
-
-                channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
-
-                embed = discord.Embed(
-                title="UP CAPES Task Ticketing System",
-                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
-                color=0xffcc1a
-                )
-                embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
-
-                view = MyView()
-
-                await interaction.followup.send(embed=embed, view=view, ephemeral=True)
+                await interaction.response.send_message(
+                            "Please select the **context** of the task:\n*Choose **Restart** if you want to restart again from the beginning*.", 
+                            view=DropdownView("task_context","","",""), ephemeral=True
+                        )
 
             else:
                 await interaction.followup.send(
@@ -1369,18 +1231,10 @@ class ToChangeDropdown(discord.ui.Select):
             await msg.delete()
 
             if notes == "R":
-                channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
-
-                embed = discord.Embed(
-                title="UP CAPES Task Ticketing System",
-                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
-                color=0xffcc1a
-                )
-                embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
-
-                view = MyView()
-
-                await interaction.followup.send(embed=embed, view=view, ephemeral=True)
+                await interaction.response.send_message(
+                            "Please select the **context** of the task:\n*Choose **Restart** if you want to restart again from the beginning*.", 
+                            view=DropdownView("task_context","","",""), ephemeral=True
+                        )
 
             else:
                 await interaction.followup.send(
@@ -1389,7 +1243,7 @@ class ToChangeDropdown(discord.ui.Select):
                     ephemeral=True
                 )
 
-        elif selected_to_change in ("Task Creator", "Person/s in Charge"):
+        elif selected_to_change in ("CC", "Person/s in Charge"):
             await interaction.response.send_message(f"You selected **{selected_to_change}** as the detail you wish to change.\nPlease tag new {selected_to_change}.\n*Type **R** if you want to restart again from the beginning*.", ephemeral=True)
 
             def check(msg):
@@ -1400,22 +1254,13 @@ class ToChangeDropdown(discord.ui.Select):
             await msg.delete()
 
             if people == "R":
-
-                channel = client.get_channel(TASK_MANAGEMENT_CHANNEL_ID)
-
-                embed = discord.Embed(
-                title="UP CAPES Task Ticketing System",
-                description="Welcome to UP CAPES Task Ticketing System!\n\nYou may assign tasks to members through the **'Create Task'** button or modify tasks through the **'Edit Task'** button.\n\nTo see the list of tasks for UP CAPES members,\nplease see the Google Sheets below:\n\nhttps://upcapes.org/TicketingSystem",
-                color=0xffcc1a
-                )
-                embed.set_thumbnail(url="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/325405449_488094626829126_7271643387150285464_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHMGyftRxPw6qWcVaXDs8WwSCzP57N9u2pILM_ns327aqsHs3baBpSygqlpkkiMhhf2VbfzJPZjsHCjgrkXFvkY&_nc_ohc=qxPE1f-bEQwQ7kNvgF3_rU1&_nc_zt=23&_nc_ht=scontent.fmnl3-3.fna&_nc_gid=AK46GnscB1fRz81NBq278xZ&oh=00_AYDVmLujMPhUXAsy1nZzAhQpb4G0KsOHTZcIA0rtgDRdaA&oe=67761A95")
-
-                view = MyView()
-
-                await interaction.followup.send(embed=embed, view=view, ephemeral=True)
+                await interaction.response.send_message(
+                            "Please select the **context** of the task:\n*Choose **Restart** if you want to restart again from the beginning*.", 
+                            view=DropdownView("task_context","","",""), ephemeral=True
+                        )
 
             else:
-                if selected_to_change == "Task Creator":
+                if selected_to_change == "CC":
                     await interaction.followup.send(
                         f"You wrote **\"{people}\"** as the new {selected_to_change}.",
                         view=DropdownView("to_change", self.task_id, self.task_context, self.task_description, self.task_priority, self.task_status, self.requesting_committee, self.committee_responsible, self.subcommittee_responsible, self.receiving_committee, self.resolved_status, self.deadline, self.notes, people, self.respo_mentions, self.cc),
